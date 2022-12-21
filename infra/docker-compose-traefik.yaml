@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  traefik:
+    image: traefik:1.7-alpine
+    container_name: traefik
+    restart: always
+    deploy:
+      labels:
+      - "traefik.frontend.rule=Host:traefik.${DOMAIN:-g1.nordquant.com}"
+      - "traefik.port=8080"    
+    command:
+      - --retry
+      #- --debug
+      - --rest
+      #- --docker.domain=${DOMAIN:-lvh.me}
+      - --docker.domain=${DOMAIN:-g1.nordquant.com}
+      - --docker.network=example
+      - --api.dashboard
+      - --docker.swarmmode=true
+    labels:
+      - "traefik.frontend.rule=Host:traefik.${DOMAIN:-g1.nordquant.com}"
+      - "traefik.port=8080"
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  wednesday:
+    image: lalyos/12factor
+    deploy:
+      replicas: 3
+      labels:
+      - "traefik.frontend.rule=Host:wed.g1.nordquant.com"
+      - "traefik.port=80"
+      - 'traefik.frontend.auth.basic=admin:$$1$$I5Kt8BwT$$G4y6mBV3xVzyZKUECxqV61' 
+    environment:
+      - TITLE=MLOps example
+      - COLOR=red
+    labels:
+      - "traefik.frontend.rule=Host:wed.g1.nordquant.com"
+    ports:
+      - 80
+networks:
+  default:
+    name: example
+    external: true
+    # name: traefik

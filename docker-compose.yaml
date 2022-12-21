@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  api:
+    # image: exampleapp:alpine
+    # image: 918920403568.dkr.ecr.eu-west-1.amazonaws.com/gtest:latest
+    image: g1.nordquant.com:5000/exampleapp:v1
+    # build: .
+      
+    # volumes:
+    #   - .:/exampleapp/
+    deploy:
+      replicas: 3
+      labels:
+      - "traefik.frontend.rule=Host:api.example.nordquant.com"
+      - "traefik.port=80"
+    environment:
+      - EXTRA_ARGS=--reload
+      - VIRTUAL_HOST=api.example.nordquant.com
+      - FAST_ID=${FAST_ID}
+    ports:
+    - 80
+
+networks:
+  default:
+    name: example
+    external: true
