@@ -2,6 +2,23 @@
 
 Notes on building a highly available MLOps platform with Docker Swarm.
 
+## Prototype Env Setup
+```
+sudo apt update && sudo apt upgrade -y && sudo apt install -y docker.io 
+sudo apt install -y awscli
+
+sudo usermod -aG docker ${USER}
+
+sudo vim /etc/hosts
+sudo hostnamectl set-hostname g1.nordquant.com
+```
+
+## Some keywords to remember
+- alpine
+- composerize.com
+- 12factor.net
+
+
 ## Further improvements
 
 - [ ]  Introduce [service config](https://docs.docker.com/engine/swarm/configs/) instead of env vars
